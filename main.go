@@ -29,7 +29,13 @@ func main() {
 			fmt.Printf("Successfully created directory: %s\n", dir)
 		}
 	}
-	os.WriteFile(fmt.Sprintf("%s/Dockerfile", name), []byte(dockerfile), 0644)
+	file, err := os.ReadFile("./file/Dockerfile")
+	if err != nil {
+		fmt.Printf("ReadFile Error ./file/Dockerfile", err)
+	} else {
+		os.WriteFile(fmt.Sprintf("%s/Dockerfile", name), file, 0644)
+		//os.WriteFile(fmt.Sprintf("%s/Dockerfile", name), []byte(dockerfile), 0644)
+	}
 	os.WriteFile(fmt.Sprintf("%s/config/config.yaml", name), []byte(""), 0644)
 	os.WriteFile(fmt.Sprintf("%s/start.sh", name), []byte(startSH), 0644)
 	os.WriteFile(fmt.Sprintf("%s/cmd/main/main.go", name), []byte(mainFile), 0644)
@@ -74,7 +80,7 @@ func runGoModInit(name string) error {
 }
 func runGoModTidy(name string) error {
 	// 设置命令，并通过 exec.Command 运行
-	cmd := exec.Command("go", "mod", "tidy", name)
+	cmd := exec.Command("go", "mod", "tidy")
 
 	// 设置当前工作目录为项目根目录
 	cmd.Dir = name
